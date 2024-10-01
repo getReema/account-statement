@@ -9,20 +9,20 @@ import jakarta.persistence.Table;
 public class Statement {
 	
 	 @Id
-	    private Long id;
-	    private Long accountId;
+	    private int id;
+	    private int accountId;
 	    private String datefield;
 	    private String amount;
-		public Long getId() {
+		public int getId() {
 			return id;
 		}
-		public void setId(Long id) {
+		public void setId(int id) {
 			this.id = id;
 		}
-		public Long getAccountId() {
+		public int getAccountId() {
 			return accountId;
 		}
-		public void setAccountId(Long accountId) {
+		public void setAccountId(int accountId) {
 			this.accountId = accountId;
 		}
 		public String getDateField() {
