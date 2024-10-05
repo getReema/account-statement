@@ -1,16 +1,24 @@
 package reema.com.controller;
 
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
+import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import reema.com.dto.AccountStatementDTO;
 import reema.com.entity.Account;
 import reema.com.entity.Statement;
+import reema.com.exception.BadParameters;
 import reema.com.service.AccountService;
 import reema.com.service.StatementService;
 
@@ -29,6 +37,7 @@ public class StatementController {
 	
 	// get all accounts
 	// http://localhost:8080/api/statement/
+	
 	@GetMapping("/")
 	public List<Account> getAllAccounts(){
 		
@@ -40,35 +49,49 @@ public class StatementController {
 		return accounts; 
 		
 	}
-	
-	// get statment by account ID 
-	// http://localhost:8080/api/statement/{id}
-	@GetMapping("{id}")
-	public List<Statement> getStatementsPerAccount(@PathVariable("id") int id){
-		
-		List<Statement> statments = statementService.getStatments(id);
-		
-		if(statments.size()==0)
-			return null;
-		
-		return statementService.getStatments(id); // should be passing long L here ?
-		
-	}
+
 	
 	
-	//get statement by amount range 
-	//http://localhost:8080/api/statement/by-amount-range?fromAmount=100&toAmount=200
-	 @GetMapping("/by-amount-range")
-	    public List<Statement> getTransactionsByAmountRange(@RequestParam Double fromAmount, @RequestParam Double toAmount) {
-	        return statementService.getTransactionsByAmountRange(fromAmount, toAmount);
-	    }
-	
-	 // get statement by amount & date range 
-	 @GetMapping("/by-amount-date-range")
-	    public List<Statement> getTransactionsByAmountDateRange(@RequestParam Double fromAmount, @RequestParam Double toAmount,@RequestParam String fromDate, @RequestParam String toDate ) {
-	        return statementService.getTransactionsByAmountAndDate(fromAmount, toAmount, fromDate, toDate);
-	    }
-	
-	
+		// Return statement for the account id. consider filling date and amount range
+		// http://localhost:8080/api/statement/{id}/by-amount-date-range?fromAmount=100&toAmount=200&fromDate=20.05.2020&toDate=14.10.2023
+		@GetMapping("{id}/by-amount-date-range")
+		public ResponseEntity<Set<Account>> getStatementsPerAccount(@PathVariable("id") int id,
+		                                               @RequestParam(required = false) Double fromAmount,
+		                                               @RequestParam(required = false) Double toAmount,
+		                                               @RequestParam(required = false) String fromDate,
+		                                               @RequestParam(required = false) String toDate) {
+
+			
+
+			    // Handle invalid amount parameters
+			    if (fromAmount != null && toAmount != null && fromAmount > toAmount) {
+			    	throw new BadParameters(" Invalid amount paramters!");
+			    }
+
+			    // Handle missing date parameters
+			    if (fromDate == null || toDate == null) {
+			        // Fetch last three months if either or both dates are missing
+			        LocalDate currentDate = LocalDate.of(id, id, id);
+			        fromDate = currentDate.minusMonths(3).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+			        toDate = currentDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+			    }
+
+			    // Validate date format and range
+			    try {
+			        LocalDate.parse(fromDate, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+			        LocalDate.parse(toDate, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+			    } catch (DateTimeParseException e) {
+			    	throw new BadParameters(" Invalid date paramters!");
+			    }
+
+			    if (LocalDate.parse(fromDate, DateTimeFormatter.ofPattern("dd.MM.yyyy")).isAfter(LocalDate.parse(toDate, DateTimeFormatter.ofPattern("dd.MM.yyyy")))) {
+			    	throw new BadParameters(" Invalid date after paramters!, fromDate is after toDate");
+			    }
+
+			    // if all is safe, proceed to fetch statament 
+			    Set<Account> statements = statementService.getTransactionsByAmountAndDate(id, fromAmount, toAmount, fromDate, toDate);
+
+			    return ResponseEntity.ok(statements);
+			}
 
 }

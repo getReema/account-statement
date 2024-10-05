@@ -1,7 +1,16 @@
 package reema.com.entity;
 
+import java.util.List;
+import java.util.Set;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 
 @Entity
@@ -9,13 +18,19 @@ import jakarta.persistence.Table;
 public class Account {
 
     @Id
-    private Long id;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private int id;
     private String accountType;
     private String accountNumber;
-	public Long getId() {
+    
+    @OneToMany 
+    @JoinColumn(name = "accountId" )
+    private Set<Statement> statements;
+    
+	public int getId() {
 		return id;
 	}
-	public void setId(Long id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 	public String getAccountType() {
@@ -29,6 +44,12 @@ public class Account {
 	}
 	public void setAccountNumber(String accountNumber) {
 		this.accountNumber = accountNumber;
+	}
+	public Set<Statement> getStatements() {
+		return statements;
+	}
+	public void setStatements(Set<Statement> statements) {
+		this.statements = statements;
 	}
 
 
