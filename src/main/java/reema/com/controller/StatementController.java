@@ -51,11 +51,10 @@ public class StatementController {
 	}
 
 	
-	
-		// Return statement for the account id. consider filling date and amount range
+ 		// Return statement for the account id. consider filling date and amount range
 		// http://localhost:8080/api/statement/{id}/by-amount-date-range?fromAmount=100&toAmount=200&fromDate=20.05.2020&toDate=14.10.2023
-		@GetMapping("{id}/by-amount-date-range")
-		public ResponseEntity<Set<Account>> getStatementsPerAccount(@PathVariable("id") int id,
+		@GetMapping("/{id}/by-amount-date-range")
+		public ResponseEntity<Set<Account>> getStatementsPerAccountDateAmountRange(@PathVariable("id") int id,
 		                                               @RequestParam(required = false) Double fromAmount,
 		                                               @RequestParam(required = false) Double toAmount,
 		                                               @RequestParam(required = false) String fromDate,
@@ -71,7 +70,7 @@ public class StatementController {
 			    // Handle missing date parameters
 			    if (fromDate == null || toDate == null) {
 			        // Fetch last three months if either or both dates are missing
-			        LocalDate currentDate = LocalDate.of(id, id, id);
+			        LocalDate currentDate = LocalDate.now(); // last day in db .of(2020, 11, 29)
 			        fromDate = currentDate.minusMonths(3).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
 			        toDate = currentDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
 			    }
@@ -89,7 +88,7 @@ public class StatementController {
 			    }
 
 			    // if all is safe, proceed to fetch statament 
-			    Set<Account> statements = statementService.getTransactionsByAmountAndDate(id, fromAmount, toAmount, fromDate, toDate);
+			    Set<Account> statements = accountService.getAccountStatmentsByAmountAndDate(id, fromAmount, toAmount, fromDate, toDate);
 
 			    return ResponseEntity.ok(statements);
 			}

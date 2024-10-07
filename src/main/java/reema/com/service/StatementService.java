@@ -28,21 +28,4 @@ public class StatementService {
 		
 	}
 
-	
-	
-	public List<Statement> getTransactionsByAmountRange(double from, double to){
-	
-		return statementRepo.findAllByAmountRange(from, to);
-	}
-	
-	
-	
-	public Set<Account> getTransactionsByAmountAndDate(int accountId, double fromAmount, double toAmount, String fromDate, String toDate){
-				
-	
-		Set<Account> statements = accountRepo.findAllByAmounAndDatefieldtRange(accountId,fromAmount, toAmount, fromDate, toDate);
-
-		
-		return  statements;
-	}
 }

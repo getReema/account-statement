@@ -44,12 +44,7 @@ public class Statement {
 		public void setAmount(String amount) {
 			this.amount = amount;
 		}
-		public String getDatefield() {
-			return datefield;
-		}
-		public void setDatefield(String datefield) {
-			this.datefield = datefield;
-		}
+
 
 	    
 
