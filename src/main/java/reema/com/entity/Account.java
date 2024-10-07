@@ -1,7 +1,10 @@
 package reema.com.entity;
 
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Set;
+
+import com.google.common.hash.Hashing;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
@@ -40,7 +43,9 @@ public class Account {
 		this.accountType = accountType;
 	}
 	public String getAccountNumber() {
-		return accountNumber;
+		
+		return Hashing.sha256().hashString(accountNumber, StandardCharsets.UTF_8)
+		        .toString();
 	}
 	public void setAccountNumber(String accountNumber) {
 		this.accountNumber = accountNumber;
