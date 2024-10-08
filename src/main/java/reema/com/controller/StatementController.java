@@ -81,7 +81,7 @@ public class StatementController {
 
 			    // Handle invalid amount parameters
 			    if (fromAmount != null && toAmount != null && fromAmount > toAmount) {
-			    	throw new BadParameters(" Invalid amount paramters!");
+			    	throw new BadParameters("Invalid amount parameters!");
 			    }
 
 			    // Handle missing date parameters
@@ -97,11 +97,11 @@ public class StatementController {
 			        LocalDate.parse(fromDate, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
 			        LocalDate.parse(toDate, DateTimeFormatter.ofPattern("dd.MM.yyyy"));
 			    } catch (DateTimeParseException e) {
-			    	throw new BadParameters(" Invalid date paramters!");
+			    	throw new BadParameters("Invalid date parameters!");
 			    }
 
 			    if (LocalDate.parse(fromDate, DateTimeFormatter.ofPattern("dd.MM.yyyy")).isAfter(LocalDate.parse(toDate, DateTimeFormatter.ofPattern("dd.MM.yyyy")))) {
-			    	throw new BadParameters(" Invalid date after paramters!, fromDate is after toDate");
+			    	throw new BadParameters("Invalid date after parameters!, fromDate is after toDate");
 			    }
 
 			    // if all is safe, proceed to fetch statament 
