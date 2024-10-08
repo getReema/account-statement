@@ -28,7 +28,7 @@ public class AccessConfig {
         http
             .authorizeHttpRequests(authorize -> authorize
                 .requestMatchers("/api/statement/").hasAnyRole("USER", "ADMIN") 
-                .requestMatchers("/api/statement/{id}").hasAnyRole("USER", "ADMIN") 
+                .requestMatchers("/api/statement/{id}").hasAnyRole("USER", "ADMIN")
                 .anyRequest().hasRole("ADMIN"))
             .formLogin(form -> form
                 .defaultSuccessUrl("/api/statement/", true))

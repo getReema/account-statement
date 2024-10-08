@@ -7,6 +7,7 @@ import java.util.Set;
 import com.google.common.hash.Hashing;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -26,30 +27,31 @@ public class Account {
     private String accountType;
     private String accountNumber;
     
-    @OneToMany 
-    @JoinColumn(name = "accountId" )
-    private Set<Statement> statements;
+    //@OneToMany 
+    //@JoinColumn(name = "accountId")
+   // private Set<Statement> statements;
     
+
+	public String getAccountType() {
+		return accountType;
+	}
 	public int getId() {
 		return id;
 	}
 	public void setId(int id) {
 		this.id = id;
 	}
-	public String getAccountType() {
-		return accountType;
-	}
 	public void setAccountType(String accountType) {
 		this.accountType = accountType;
 	}
 	public String getAccountNumber() {
 		
-		return Hashing.sha256().hashString(accountNumber, StandardCharsets.UTF_8)
-		        .toString();
+		return accountNumber;
 	}
 	public void setAccountNumber(String accountNumber) {
 		this.accountNumber = accountNumber;
 	}
+	/*
 	public Set<Statement> getStatements() {
 		return statements;
 	}
@@ -57,7 +59,7 @@ public class Account {
 		this.statements = statements;
 	}
 
-
+*/
 	
     
     
