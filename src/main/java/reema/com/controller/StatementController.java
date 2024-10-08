@@ -50,6 +50,23 @@ public class StatementController {
 		
 	}
 
+	// Return statement for the account id. consider filling date and amount range
+	// http://localhost:8080/api/statement/{id}/by-amount-date-range?fromAmount=100&toAmount=200&fromDate=20.05.2020&toDate=14.10.2023
+	@GetMapping("/{id}")
+	public ResponseEntity<List<Account>> getStatementsPerAccount(@PathVariable("id") int id) {
+
+
+		LocalDate currentDate = LocalDate.of(2020, 11, 29); // last day in db .of(2020, 11, 29)
+        String fromDate = currentDate.minusMonths(3).format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        String toDate = currentDate.format(DateTimeFormatter.ofPattern("dd.MM.yyyy"));
+        
+		    // if all is safe, proceed to fetch statament 
+		    List<Account> statements = accountService.getAccountStatmentsLastThreeMonths(id,fromDate,toDate);
+
+		    return ResponseEntity.ok(statements);
+		}
+	
+	
 	
  		// Return statement for the account id. consider filling date and amount range
 		// http://localhost:8080/api/statement/{id}/by-amount-date-range?fromAmount=100&toAmount=200&fromDate=20.05.2020&toDate=14.10.2023
